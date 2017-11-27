@@ -1,19 +1,21 @@
 {-
 Todo:
-- Noise when finished
 - Adjustable pomo length
 - Can work longer than countdown
 - Pomodoro has start time, list of prev pomos shows start day/time of each
 - Stats for current day only?
 - All times in right-hand column show as "35m" or "2h 25m", not mm:ss
 - Save model to local storage
+
+Tada:
+- Noise when finished
 -}
 
 module Elmodoro exposing (main)
 
-import Html exposing (Html, div, h1, h2, h3, text, br, button, input)
+import Html exposing (Html, div, h1, h2, h3, text, br, button, input, audio)
 import Html.Events exposing (onClick, onInput)
-import Html.Attributes exposing (class, type_, placeholder, value)
+import Html.Attributes exposing (class, type_, placeholder, value, src, autoplay)
 import Time exposing (Time, second, minute)
 
 main : Program Never Model Msg
@@ -168,7 +170,9 @@ view model =
         ]
       ]
     ]
+  , viewAudio model
   ]
+
 
 timeToString : Time -> String
 timeToString time =
@@ -246,3 +250,11 @@ viewStats model =
            , br [] []
            , text ("Completed pomodoros: " ++ completedPomos)
            ]
+
+viewAudio : Model -> Html Msg
+viewAudio model =
+  case model.timeRemain of
+    0 ->
+      audio [ src "bark.ogg", autoplay True ] []
+    _ ->
+      div [] []

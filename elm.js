@@ -8672,9 +8672,31 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
+var _user$project$Elmodoro$viewAudio = function (model) {
+	var _p0 = model.timeRemain;
+	if (_p0 === 0) {
+		return A2(
+			_elm_lang$html$Html$audio,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$src('bark.ogg'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$autoplay(true),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'});
+	} else {
+		return A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{ctor: '[]'});
+	}
+};
 var _user$project$Elmodoro$viewStatus = function (status) {
-	var _p0 = status;
-	switch (_p0.ctor) {
+	var _p1 = status;
+	switch (_p1.ctor) {
 		case 'NoActivity':
 			return _elm_lang$html$Html$text('Get ready to work on:');
 		case 'PomoOn':
@@ -8764,8 +8786,8 @@ var _user$project$Elmodoro$viewStats = function (model) {
 		});
 };
 var _user$project$Elmodoro$incrementCurPomo = function (model) {
-	var _p1 = model.status;
-	if (_p1.ctor === 'PomoOn') {
+	var _p2 = model.status;
+	if (_p2.ctor === 'PomoOn') {
 		var pomo = model.curPomo;
 		return _elm_lang$core$Native_Utils.update(
 			pomo,
@@ -8796,8 +8818,8 @@ var _user$project$Elmodoro$EndActivity = {ctor: 'EndActivity'};
 var _user$project$Elmodoro$PausePomo = {ctor: 'PausePomo'};
 var _user$project$Elmodoro$StartPomo = {ctor: 'StartPomo'};
 var _user$project$Elmodoro$viewControls = function (status) {
-	var _p2 = status;
-	switch (_p2.ctor) {
+	var _p3 = status;
+	switch (_p3.ctor) {
 		case 'NoActivity':
 			return A2(
 				_elm_lang$html$Html$div,
@@ -9111,7 +9133,11 @@ var _user$project$Elmodoro$view = function (model) {
 							_1: {ctor: '[]'}
 						}
 					}),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _user$project$Elmodoro$viewAudio(model),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
@@ -9186,12 +9212,12 @@ var _user$project$Elmodoro$tickUpdate = function (model) {
 };
 var _user$project$Elmodoro$update = F2(
 	function (msg, model) {
-		var _p3 = msg;
-		switch (_p3.ctor) {
+		var _p4 = msg;
+		switch (_p4.ctor) {
 			case 'UpdateDesc':
 				return {
 					ctor: '_Tuple2',
-					_0: A2(_user$project$Elmodoro$updateDesc, model, _p3._0),
+					_0: A2(_user$project$Elmodoro$updateDesc, model, _p4._0),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'Tick':
