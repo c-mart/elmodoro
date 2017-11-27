@@ -1,0 +1,13 @@
+.digital-clock {
+  font-family: 'digital-clock-font';
+  font-size: 6.0rem;
+}
+
+@font-face {
+  font-family: 'digital-clock-font';
+  src: url('fonts/DIGITALDREAM.ttf');
+}
+
+.container {
+  margin-top: 2.0rem;
+}
