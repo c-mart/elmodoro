@@ -9032,8 +9032,8 @@ var _user$project$Elmodoro$PomoPaused = {ctor: 'PomoPaused'};
 var _user$project$Elmodoro$PomoOn = {ctor: 'PomoOn'};
 var _user$project$Elmodoro$NoActivity = {ctor: 'NoActivity'};
 var _user$project$Elmodoro$init = function () {
-	var defaultBreakLen = 5 * _elm_lang$core$Time$second;
-	var defaultPomoLen = 3 * _elm_lang$core$Time$second;
+	var defaultBreakLen = 5 * _elm_lang$core$Time$minute;
+	var defaultPomoLen = 25 * _elm_lang$core$Time$minute;
 	return {
 		ctor: '_Tuple2',
 		_0: {
