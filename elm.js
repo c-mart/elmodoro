@@ -8707,7 +8707,161 @@ var _user$project$Elmodoro$viewStatus = function (status) {
 			return _elm_lang$html$Html$text('Pomodoro complete, go take a break!');
 	}
 };
-var _user$project$Elmodoro$timeToString = function (time) {
+var _user$project$Elmodoro$pomoTableHeader = A2(
+	_elm_lang$html$Html$tr,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$td,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$strong,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Start time'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$td,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$strong,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Description'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$td,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$strong,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Duration'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _user$project$Elmodoro$clockTimeToString = function (time) {
+	var minutes = function (f) {
+		return A3(
+			_elm_lang$core$String$padLeft,
+			2,
+			_elm_lang$core$Native_Utils.chr('0'),
+			_elm_lang$core$Basics$toString(
+				A2(_elm_lang$core$Basics_ops['%'], f, 60)));
+	}(
+		_elm_lang$core$Basics$floor(
+			_elm_lang$core$Time$inMinutes(time)));
+	var hours = function (f) {
+		return A3(
+			_elm_lang$core$String$padLeft,
+			2,
+			_elm_lang$core$Native_Utils.chr('0'),
+			_elm_lang$core$Basics$toString(
+				A2(_elm_lang$core$Basics_ops['%'], f, 24)));
+	}(
+		_elm_lang$core$Basics$floor(
+			_elm_lang$core$Time$inHours(time)));
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		hours,
+		A2(_elm_lang$core$Basics_ops['++'], ':', minutes));
+};
+var _user$project$Elmodoro$timeDurationToHMString = function (time) {
+	var seconds = function (f) {
+		return _elm_lang$core$Basics$toString(
+			A2(_elm_lang$core$Basics_ops['%'], f, 60));
+	}(
+		_elm_lang$core$Basics$floor(
+			_elm_lang$core$Time$inSeconds(time)));
+	var minutes = _elm_lang$core$Basics$toString(
+		_elm_lang$core$Basics$floor(
+			_elm_lang$core$Time$inMinutes(time)));
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		minutes,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'm ',
+			A2(_elm_lang$core$Basics_ops['++'], seconds, 's')));
+};
+var _user$project$Elmodoro$viewPomo = function (pomo) {
+	var startTimeStr = function () {
+		var _p2 = pomo.startTime;
+		if (_p2.ctor === 'Just') {
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				_user$project$Elmodoro$clockTimeToString(_p2._0),
+				' ');
+		} else {
+			return '';
+		}
+	}();
+	var desc = _elm_lang$core$String$isEmpty(pomo.desc) ? '(no description)' : pomo.desc;
+	return A2(
+		_elm_lang$html$Html$tr,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$td,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(startTimeStr),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$td,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(desc),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$td,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								_user$project$Elmodoro$timeDurationToHMString(pomo.len)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Elmodoro$timeDurationToClockString = function (time) {
 	var seconds = function (f) {
 		return A3(
 			_elm_lang$core$String$padLeft,
@@ -8730,21 +8884,28 @@ var _user$project$Elmodoro$timeToString = function (time) {
 		minutes,
 		A2(_elm_lang$core$Basics_ops['++'], ':', seconds));
 };
-var _user$project$Elmodoro$viewPomo = function (pomo) {
-	var desc = _elm_lang$core$String$isEmpty(pomo.desc) ? '(no description)' : pomo.desc;
+var _user$project$Elmodoro$viewClock = function (time) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('digital-clock'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				_user$project$Elmodoro$timeDurationToClockString(time)),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Elmodoro$viewBreak = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					desc,
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						' for ',
-						_user$project$Elmodoro$timeToString(pomo.length)))),
+			_0: _user$project$Elmodoro$viewClock(model.timeRemain),
 			_1: {ctor: '[]'}
 		});
 };
@@ -8754,11 +8915,11 @@ var _user$project$Elmodoro$viewStats = function (model) {
 		_elm_lang$core$List$foldl,
 		F2(
 			function (pomo, totTime) {
-				return totTime + pomo.length;
+				return totTime + pomo.len;
 			}),
 		0,
 		pomos);
-	var totalTimeStr = _user$project$Elmodoro$timeToString(totalTime);
+	var totalTimeStr = _user$project$Elmodoro$timeDurationToClockString(totalTime);
 	var completedPomos = function (x) {
 		return _elm_lang$core$Basics$toString(x - 1);
 	}(
@@ -8785,17 +8946,58 @@ var _user$project$Elmodoro$viewStats = function (model) {
 			}
 		});
 };
+var _user$project$Elmodoro$pluralize = F2(
+	function (number, singularWord) {
+		var _p3 = number;
+		if (_p3 === 1) {
+			return singularWord;
+		} else {
+			return A2(_elm_lang$core$Basics_ops['++'], singularWord, 's');
+		}
+	});
 var _user$project$Elmodoro$incrementCurPomo = function (model) {
-	var _p2 = model.status;
-	if (_p2.ctor === 'PomoOn') {
+	var _p4 = model.status;
+	if (_p4.ctor === 'PomoOn') {
 		var pomo = model.curPomo;
 		return _elm_lang$core$Native_Utils.update(
 			pomo,
-			{length: pomo.length + (1 * _elm_lang$core$Time$second)});
+			{len: pomo.len + (1 * _elm_lang$core$Time$second)});
 	} else {
 		return model.curPomo;
 	}
 };
+var _user$project$Elmodoro$updatePomoStartTime = F3(
+	function (model, curPomo, time) {
+		var newCurPomo = _elm_lang$core$Native_Utils.update(
+			curPomo,
+			{
+				startTime: _elm_lang$core$Maybe$Just(time)
+			});
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{curPomo: newCurPomo}),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
+	});
+var _user$project$Elmodoro$updatePomoLen = F2(
+	function (model, newPomoLenStr) {
+		var newPomoLen = A2(
+			F2(
+				function (x, y) {
+					return x * y;
+				}),
+			_elm_lang$core$Time$minute,
+			_elm_lang$core$Basics$toFloat(
+				A2(
+					_elm_lang$core$Result$withDefault,
+					25,
+					_elm_lang$core$String$toInt(newPomoLenStr))));
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{pomoLen: newPomoLen});
+	});
 var _user$project$Elmodoro$updateDesc = F2(
 	function (model, newDesc) {
 		var oldPomo = model.curPomo;
@@ -8808,18 +9010,81 @@ var _user$project$Elmodoro$updateDesc = F2(
 	});
 var _user$project$Elmodoro$Model = F6(
 	function (a, b, c, d, e, f) {
-		return {timeRemain: a, status: b, curPomo: c, prevPomos: d, pomoLength: e, breakLength: f};
+		return {timeRemain: a, status: b, curPomo: c, prevPomos: d, pomoLen: e, breakLen: f};
 	});
-var _user$project$Elmodoro$Pomodoro = F2(
-	function (a, b) {
-		return {length: a, desc: b};
+var _user$project$Elmodoro$Pomodoro = F3(
+	function (a, b, c) {
+		return {len: a, desc: b, startTime: c};
 	});
-var _user$project$Elmodoro$EndActivity = {ctor: 'EndActivity'};
+var _user$project$Elmodoro$Break = {ctor: 'Break'};
+var _user$project$Elmodoro$endPomo = function (model) {
+	var newPrevPomos = {ctor: '::', _0: model.curPomo, _1: model.prevPomos};
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			status: _user$project$Elmodoro$Break,
+			timeRemain: model.breakLen,
+			curPomo: {len: 0 * _elm_lang$core$Time$second, desc: '', startTime: _elm_lang$core$Maybe$Nothing},
+			prevPomos: newPrevPomos
+		});
+};
+var _user$project$Elmodoro$PomoPaused = {ctor: 'PomoPaused'};
+var _user$project$Elmodoro$PomoOn = {ctor: 'PomoOn'};
+var _user$project$Elmodoro$NoActivity = {ctor: 'NoActivity'};
+var _user$project$Elmodoro$init = function () {
+	var defaultBreakLen = 5 * _elm_lang$core$Time$second;
+	var defaultPomoLen = 3 * _elm_lang$core$Time$second;
+	return {
+		ctor: '_Tuple2',
+		_0: {
+			timeRemain: defaultPomoLen,
+			status: _user$project$Elmodoro$NoActivity,
+			curPomo: {len: 0 * _elm_lang$core$Time$second, desc: '', startTime: _elm_lang$core$Maybe$Nothing},
+			prevPomos: {ctor: '[]'},
+			pomoLen: defaultPomoLen,
+			breakLen: defaultBreakLen
+		},
+		_1: _elm_lang$core$Platform_Cmd$none
+	};
+}();
+var _user$project$Elmodoro$tickUpdate = function (model) {
+	return A2(
+		_elm_lang$core$List$member,
+		model.status,
+		{
+			ctor: '::',
+			_0: _user$project$Elmodoro$NoActivity,
+			_1: {
+				ctor: '::',
+				_0: _user$project$Elmodoro$PomoPaused,
+				_1: {ctor: '[]'}
+			}
+		}) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : ((_elm_lang$core$Native_Utils.cmp(model.timeRemain, 0) > 0) ? {
+		ctor: '_Tuple2',
+		_0: _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				timeRemain: model.timeRemain - (1 * _elm_lang$core$Time$second),
+				curPomo: _user$project$Elmodoro$incrementCurPomo(model)
+			}),
+		_1: _elm_lang$core$Platform_Cmd$none
+	} : {
+		ctor: '_Tuple2',
+		_0: _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				curPomo: _user$project$Elmodoro$incrementCurPomo(model)
+			}),
+		_1: _elm_lang$core$Platform_Cmd$none
+	});
+};
+var _user$project$Elmodoro$EndBreak = {ctor: 'EndBreak'};
+var _user$project$Elmodoro$EndPomo = {ctor: 'EndPomo'};
 var _user$project$Elmodoro$PausePomo = {ctor: 'PausePomo'};
 var _user$project$Elmodoro$StartPomo = {ctor: 'StartPomo'};
 var _user$project$Elmodoro$viewControls = function (status) {
-	var _p3 = status;
-	switch (_p3.ctor) {
+	var _p5 = status;
+	switch (_p5.ctor) {
 		case 'NoActivity':
 			return A2(
 				_elm_lang$html$Html$div,
@@ -8866,7 +9131,22 @@ var _user$project$Elmodoro$viewControls = function (status) {
 							_0: _elm_lang$html$Html$text('Pause'),
 							_1: {ctor: '[]'}
 						}),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$Elmodoro$EndPomo),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('End Pomodoro'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
 				});
 		case 'PomoPaused':
 			return A2(
@@ -8896,7 +9176,7 @@ var _user$project$Elmodoro$viewControls = function (status) {
 							_elm_lang$html$Html$button,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Events$onClick(_user$project$Elmodoro$EndActivity),
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$Elmodoro$EndPomo),
 								_1: {ctor: '[]'}
 							},
 							{
@@ -8917,7 +9197,7 @@ var _user$project$Elmodoro$viewControls = function (status) {
 						_elm_lang$html$Html$button,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_user$project$Elmodoro$EndActivity),
+							_0: _elm_lang$html$Html_Events$onClick(_user$project$Elmodoro$EndBreak),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -8929,10 +9209,206 @@ var _user$project$Elmodoro$viewControls = function (status) {
 				});
 	}
 };
+var _user$project$Elmodoro$UpdatePomoStartTime = function (a) {
+	return {ctor: 'UpdatePomoStartTime', _0: a};
+};
+var _user$project$Elmodoro$startPomo = function (model) {
+	return {
+		ctor: '_Tuple2',
+		_0: _elm_lang$core$Native_Utils.update(
+			model,
+			{status: _user$project$Elmodoro$PomoOn}),
+		_1: A2(_elm_lang$core$Task$perform, _user$project$Elmodoro$UpdatePomoStartTime, _elm_lang$core$Time$now)
+	};
+};
+var _user$project$Elmodoro$update = F2(
+	function (msg, model) {
+		var _p6 = msg;
+		switch (_p6.ctor) {
+			case 'UpdateDesc':
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_user$project$Elmodoro$updateDesc, model, _p6._0),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'UpdatePomoLen':
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_user$project$Elmodoro$updatePomoLen, model, _p6._0),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Tick':
+				return _user$project$Elmodoro$tickUpdate(model);
+			case 'UpdatePomoStartTime':
+				return A3(_user$project$Elmodoro$updatePomoStartTime, model, model.curPomo, _p6._0);
+			case 'StartPomo':
+				return _user$project$Elmodoro$startPomo(model);
+			case 'PausePomo':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{status: _user$project$Elmodoro$PomoPaused}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'EndPomo':
+				return {
+					ctor: '_Tuple2',
+					_0: _user$project$Elmodoro$endPomo(model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{status: _user$project$Elmodoro$NoActivity, timeRemain: model.pomoLen}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
+var _user$project$Elmodoro$UpdatePomoLen = function (a) {
+	return {ctor: 'UpdatePomoLen', _0: a};
+};
+var _user$project$Elmodoro$viewTimeInput = F2(
+	function (status, time) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('for '),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$input,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$type_('text'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$value(
+									_elm_lang$core$Basics$toString(
+										_elm_lang$core$Basics$floor(
+											_elm_lang$core$Time$inMinutes(time)))),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onInput(_user$project$Elmodoro$UpdatePomoLen),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								' ',
+								A2(
+									_user$project$Elmodoro$pluralize,
+									_elm_lang$core$Basics$floor(
+										_elm_lang$core$Time$inMinutes(time)),
+									'minute'))),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
 var _user$project$Elmodoro$UpdateDesc = function (a) {
 	return {ctor: 'UpdateDesc', _0: a};
 };
+var _user$project$Elmodoro$viewPomoDesc = F2(
+	function (status, desc) {
+		return A2(
+			_elm_lang$html$Html$input,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$type_('text'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$placeholder('What are you working on?'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$value(desc),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onInput(_user$project$Elmodoro$UpdateDesc),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			},
+			{ctor: '[]'});
+	});
+var _user$project$Elmodoro$viewNoActivity = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(_user$project$Elmodoro$viewPomoDesc, model.status, model.curPomo.desc),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$Elmodoro$viewTimeInput, model.status, model.pomoLen),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Elmodoro$viewPomoOnOrPaused = function (model) {
+	var timeRemainMessage = function () {
+		var _p7 = model.timeRemain;
+		if (_p7 === 0) {
+			return 'Time\'s up, but you can keep working';
+		} else {
+			return 'Time remaining:';
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(_user$project$Elmodoro$viewPomoDesc, model.status, model.curPomo.desc),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$br,
+					{ctor: '[]'},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(timeRemainMessage),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$br,
+							{ctor: '[]'},
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: _user$project$Elmodoro$viewClock(model.timeRemain),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+};
 var _user$project$Elmodoro$view = function (model) {
+	var viewFunction = function () {
+		var _p8 = model.status;
+		switch (_p8.ctor) {
+			case 'NoActivity':
+				return _user$project$Elmodoro$viewNoActivity;
+			case 'PomoOn':
+				return _user$project$Elmodoro$viewPomoOnOrPaused;
+			case 'PomoPaused':
+				return _user$project$Elmodoro$viewPomoOnOrPaused;
+			default:
+				return _user$project$Elmodoro$viewBreak;
+		}
+	}();
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -8984,65 +9460,16 @@ var _user$project$Elmodoro$view = function (model) {
 												{ctor: '[]'}),
 											_1: {
 												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$input,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$type_('text'),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$placeholder('What are you working on?'),
-															_1: {
-																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$value(model.curPomo.desc),
-																_1: {
-																	ctor: '::',
-																	_0: _elm_lang$html$Html_Events$onInput(_user$project$Elmodoro$UpdateDesc),
-																	_1: {ctor: '[]'}
-																}
-															}
-														}
-													},
-													{ctor: '[]'}),
-												_1: {ctor: '[]'}
+												_0: viewFunction(model),
+												_1: {
+													ctor: '::',
+													_0: _user$project$Elmodoro$viewControls(model.status),
+													_1: {ctor: '[]'}
+												}
 											}
 										}
 									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$div,
-										{ctor: '[]'},
-										{
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$div,
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('digital-clock'),
-													_1: {ctor: '[]'}
-												},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text(
-														_user$project$Elmodoro$timeToString(model.timeRemain)),
-													_1: {ctor: '[]'}
-												}),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$div,
-											{ctor: '[]'},
-											{
-												ctor: '::',
-												_0: _user$project$Elmodoro$viewControls(model.status),
-												_1: {ctor: '[]'}
-											}),
-										_1: {ctor: '[]'}
-									}
-								}
+								_1: {ctor: '[]'}
 							}),
 						_1: {
 							ctor: '::',
@@ -9070,7 +9497,18 @@ var _user$project$Elmodoro$view = function (model) {
 												}),
 											_1: {
 												ctor: '::',
-												_0: _user$project$Elmodoro$viewPomo(model.curPomo),
+												_0: A2(
+													_elm_lang$html$Html$table,
+													{ctor: '[]'},
+													{
+														ctor: '::',
+														_0: _user$project$Elmodoro$pomoTableHeader,
+														_1: {
+															ctor: '::',
+															_0: _user$project$Elmodoro$viewPomo(model.curPomo),
+															_1: {ctor: '[]'}
+														}
+													}),
 												_1: {ctor: '[]'}
 											}
 										}),
@@ -9120,9 +9558,16 @@ var _user$project$Elmodoro$view = function (model) {
 													_1: {
 														ctor: '::',
 														_0: A2(
-															_elm_lang$html$Html$div,
+															_elm_lang$html$Html$table,
 															{ctor: '[]'},
-															A2(_elm_lang$core$List$map, _user$project$Elmodoro$viewPomo, model.prevPomos)),
+															A2(
+																_elm_lang$core$List$append,
+																{
+																	ctor: '::',
+																	_0: _user$project$Elmodoro$pomoTableHeader,
+																	_1: {ctor: '[]'}
+																},
+																A2(_elm_lang$core$List$map, _user$project$Elmodoro$viewPomo, model.prevPomos))),
 														_1: {ctor: '[]'}
 													}
 												}),
@@ -9147,107 +9592,6 @@ var _user$project$Elmodoro$Tick = function (a) {
 var _user$project$Elmodoro$subscriptions = function (model) {
 	return A2(_elm_lang$core$Time$every, _elm_lang$core$Time$second, _user$project$Elmodoro$Tick);
 };
-var _user$project$Elmodoro$Break = {ctor: 'Break'};
-var _user$project$Elmodoro$finishPomo = function (model) {
-	var newPrevPomos = {ctor: '::', _0: model.curPomo, _1: model.prevPomos};
-	return _elm_lang$core$Native_Utils.update(
-		model,
-		{
-			status: _user$project$Elmodoro$Break,
-			timeRemain: model.breakLength,
-			curPomo: {length: 0 * _elm_lang$core$Time$second, desc: ''},
-			prevPomos: newPrevPomos
-		});
-};
-var _user$project$Elmodoro$PomoPaused = {ctor: 'PomoPaused'};
-var _user$project$Elmodoro$PomoOn = {ctor: 'PomoOn'};
-var _user$project$Elmodoro$NoActivity = {ctor: 'NoActivity'};
-var _user$project$Elmodoro$init = function () {
-	var defaultPomoLength = 5 * _elm_lang$core$Time$second;
-	return {
-		ctor: '_Tuple2',
-		_0: {
-			timeRemain: defaultPomoLength,
-			status: _user$project$Elmodoro$NoActivity,
-			curPomo: {length: 0 * _elm_lang$core$Time$second, desc: ''},
-			prevPomos: {ctor: '[]'},
-			pomoLength: defaultPomoLength,
-			breakLength: 5 * _elm_lang$core$Time$second
-		},
-		_1: _elm_lang$core$Platform_Cmd$none
-	};
-}();
-var _user$project$Elmodoro$tickUpdate = function (model) {
-	return A2(
-		_elm_lang$core$List$member,
-		model.status,
-		{
-			ctor: '::',
-			_0: _user$project$Elmodoro$NoActivity,
-			_1: {
-				ctor: '::',
-				_0: _user$project$Elmodoro$PomoPaused,
-				_1: {ctor: '[]'}
-			}
-		}) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : ((_elm_lang$core$Native_Utils.cmp(model.timeRemain, 0) > 0) ? {
-		ctor: '_Tuple2',
-		_0: _elm_lang$core$Native_Utils.update(
-			model,
-			{
-				timeRemain: model.timeRemain - (1 * _elm_lang$core$Time$second),
-				curPomo: _user$project$Elmodoro$incrementCurPomo(model)
-			}),
-		_1: _elm_lang$core$Platform_Cmd$none
-	} : (_elm_lang$core$Native_Utils.eq(model.status, _user$project$Elmodoro$PomoOn) ? {
-		ctor: '_Tuple2',
-		_0: _user$project$Elmodoro$finishPomo(model),
-		_1: _elm_lang$core$Platform_Cmd$none
-	} : {
-		ctor: '_Tuple2',
-		_0: _elm_lang$core$Native_Utils.update(
-			model,
-			{status: _user$project$Elmodoro$NoActivity, timeRemain: model.pomoLength}),
-		_1: _elm_lang$core$Platform_Cmd$none
-	}));
-};
-var _user$project$Elmodoro$update = F2(
-	function (msg, model) {
-		var _p4 = msg;
-		switch (_p4.ctor) {
-			case 'UpdateDesc':
-				return {
-					ctor: '_Tuple2',
-					_0: A2(_user$project$Elmodoro$updateDesc, model, _p4._0),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'Tick':
-				return _user$project$Elmodoro$tickUpdate(model);
-			case 'StartPomo':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{status: _user$project$Elmodoro$PomoOn}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'PausePomo':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{status: _user$project$Elmodoro$PomoPaused}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{status: _user$project$Elmodoro$NoActivity, timeRemain: model.pomoLength}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-		}
-	});
 var _user$project$Elmodoro$main = _elm_lang$html$Html$program(
 	{init: _user$project$Elmodoro$init, view: _user$project$Elmodoro$view, update: _user$project$Elmodoro$update, subscriptions: _user$project$Elmodoro$subscriptions})();
 
