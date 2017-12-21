@@ -40,8 +40,8 @@ subscriptions model =
 init : (Model, Cmd Msg)
 init =
   let
-    defaultPomoLen = 3 * second
-    defaultBreakLen = 5 * second
+    defaultPomoLen = 1 * minute
+    defaultBreakLen = 1 * minute
   in
     ( { timeRemain = defaultPomoLen
       , status = NoActivity
